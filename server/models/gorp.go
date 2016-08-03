@@ -11,7 +11,7 @@ import (
 	"gopkg.in/gorp.v1"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
-	"running/server/config"
+	"smilix/running/server/config"
 )
 
 const (

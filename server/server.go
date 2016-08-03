@@ -1,16 +1,19 @@
 package main
 
 import (
-	m "running/server/models"
+	m "smilix/running/server/models"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
 	"log"
-	"running/server/config"
+	"smilix/running/server/config"
+	"fmt"
 )
 
 func main() {
 	router := gin.Default()
+
+	router.Use(CORSMiddleware())
 
 	router.GET("/runs", RunsList)
 	router.POST("/runs", CreateRun)
@@ -19,15 +22,29 @@ func main() {
 	router.Run(":" + config.Get().Port)
 }
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Writer.Header().Set("Content-Type", "application/json")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		if c.Request.Method == "OPTIONS" {
+			fmt.Println("options")
+			c.AbortWithStatus(200)
+			return
+		}
+
+		c.Next()
+	}
+}
+
+
 func RunsList(c *gin.Context) {
 	var Runs []m.Run
 	_, err := m.Dbm.Select(&Runs, "select * from Runs")
 	checkErr(err, "Select failed")
-	content := gin.H{}
-	for k, v := range Runs {
-		content[strconv.Itoa(k)] = v
-	}
-	c.JSON(200, content)
+
+	c.JSON(200, Runs)
 }
 
 func RunDetail(c *gin.Context) {

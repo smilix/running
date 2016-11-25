@@ -9,6 +9,8 @@ import (
 type Configuration struct {
 	Port   string `json:"port"`
 	DbFile string `json:"dbFile"`
+	Auth   string `json:"auth"`
+	SessionSecret string `json:"sessionSecret"`
 }
 
 var config Configuration

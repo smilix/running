@@ -1,4 +1,7 @@
 {
   "port": "8080",
-  "dbFile": "/tmp/my.db"
+  "dbFile": "/tmp/my.db",
+  "auth": "add your auth here - see README.md !",
+  // put a good secret in here:
+  "sessionSecret": ""
 }

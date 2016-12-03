@@ -1,3 +1,6 @@
 .idea/
 _output/
+static_app/
+build/
 config.json
+*.db

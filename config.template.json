@@ -1,6 +1,8 @@
 {
+  "host": "127.0.0.1",
   "port": "8080",
   "dbFile": "/tmp/my.db",
+  "staticFolder": "static_app",
   "auth": "add your auth here - see README.md !",
   // put a good secret in here:
   "sessionSecret": ""

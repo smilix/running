@@ -1,4 +1,4 @@
-package routes
+package web
 
 import (
 	m "smilix/running/server/models"

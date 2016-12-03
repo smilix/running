@@ -7,9 +7,11 @@ import (
 )
 
 type Configuration struct {
-	Port   string `json:"port"`
-	DbFile string `json:"dbFile"`
-	Auth   string `json:"auth"`
+	Host          string `json:"host"`
+	Port          string `json:"port"`
+	DbFile        string `json:"dbFile"`
+	StaticFolder  string `json:"staticFolder"`
+	Auth          string `json:"auth"`
 	SessionSecret string `json:"sessionSecret"`
 }
 

@@ -1,4 +1,4 @@
-package routes
+package web
 
 import (
 	"github.com/gin-gonic/gin"
@@ -32,7 +32,7 @@ func CheckAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := c.Request.Header.Get(SESSION_HEADER)
 		if session == "" {
-			log.Println("Invalid session")
+			log.Println("Session is missing")
 			SendJsonError(c, 401, "Session is missing")
 			return
 		}
@@ -45,8 +45,6 @@ func CheckAuthMiddleware() gin.HandlerFunc {
 			SendJsonError(c, 401, "Invalid session")
 			return
 		}
-
-		log.Println("alles ok")
 
 		// everything is ok
 		c.Next()

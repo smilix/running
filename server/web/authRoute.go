@@ -3,11 +3,11 @@ package web
 import (
 	"github.com/gin-gonic/gin"
 	"strings"
-	"log"
 	"golang.org/x/crypto/bcrypt"
 	"smilix/running/server/config"
 	"github.com/dgrijalva/jwt-go"
 	"time"
+	"smilix/running/server/common"
 )
 
 const SESSION_LIFETIME_SEC = 12 * 60 * 60;
@@ -32,7 +32,7 @@ func CheckAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := c.Request.Header.Get(SESSION_HEADER)
 		if session == "" {
-			log.Println("Session is missing")
+			common.LOG().Println("Session is missing")
 			SendJsonError(c, 401, "Session is missing")
 			return
 		}
@@ -59,16 +59,16 @@ func CheckAuth(c *gin.Context) {
 func logErrorDetail(tokenError error) {
 	if ve, ok := tokenError.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-			log.Println("Malformed token")
+			common.LOG().Println("Malformed token")
 			return
 		}
 		if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
-			log.Println("Token is expired")
+			common.LOG().Println("Token is expired")
 		} else {
-			log.Println("Token error ", tokenError)
+			common.LOG().Println("Token error ", tokenError)
 		}
 	} else {
-		log.Println("Couldn't handle this token:", tokenError)
+		common.LOG().Println("Couldn't handle this token:", tokenError)
 	}
 }
 
@@ -82,7 +82,7 @@ func (a *Auth) login(c *gin.Context) {
 
 	split := strings.SplitN(config.Get().Auth, ":", 2)
 	if split == nil || len(split) != 2 {
-		log.Println("Configuration error! config.Auth is invalid.")
+		common.LOG().Println("Configuration error! config.Auth is invalid.")
 		SendJsonError(c, 500, "config error")
 		return
 	}
@@ -100,12 +100,12 @@ func (a *Auth) login(c *gin.Context) {
 
 	session, err := createSession()
 	if err != nil {
-		log.Println("Error during session creation: ", err)
+		common.LOG().Println("Error during session creation: ", err)
 		SendJsonError(c, 500, "jwt error")
 		return
 	}
 
-	log.Println("Created session: " + session)
+	common.LOG().Println("Created session: " + session)
 
 	content := gin.H{
 		"result": "Success",

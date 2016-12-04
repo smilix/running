@@ -2,8 +2,8 @@ package config
 
 import (
 	"io/ioutil"
-	"log"
 	"encoding/json"
+	"smilix/running/server/common"
 )
 
 type Configuration struct {
@@ -28,13 +28,13 @@ func init() {
 func loadConfig(path string) Configuration {
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Fatal("Config File Missing. ", err)
+		common.LOG().Fatal("Config File Missing. ", err)
 	}
 
 	var config Configuration
 	err = json.Unmarshal(file, &config)
 	if err != nil {
-		log.Fatal("Config Parse Error: ", err)
+		common.LOG().Fatal("Config Parse Error: ", err)
 	}
 
 	return config

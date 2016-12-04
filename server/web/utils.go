@@ -2,7 +2,7 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
+	"smilix/running/server/common"
 )
 
 
@@ -11,7 +11,7 @@ func CheckErrRest(c *gin.Context, err error, status int, msg string) bool {
 	if err == nil {
 		return false
 	}
-	log.Println(msg, err)
+	common.LOG().Println(msg, err)
 	SendJsonError(c, status, msg + " - " + err.Error())
 	return true
 }

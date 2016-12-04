@@ -12,6 +12,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"smilix/running/server/config"
+	"github.com/gin-gonic/gin"
+	"smilix/running/server/common"
 )
 
 const (
@@ -27,15 +29,17 @@ type JDate time.Time
 type CustomTypeConverter struct{}
 
 func init() {
-	log.Println("Opening db...")
+	common.LOG().Println("Opening db: ", config.Get().DbFile)
 	db, err := sql.Open("sqlite3", config.Get().DbFile)
 	checkErr(err, "opening db failed")
 	Dbm = &gorp.DbMap{Db: db, Dialect: gorp.SqliteDialect{}}
 	//Dbm.TypeConverter = CustomTypeConverter{}
 
-	// Will log all SQL statements + args as they are run
-	// The first arg is a string prefix to prepend to all log messages
-	Dbm.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
+	if gin.IsDebugging() {
+		// Will log all SQL statements + args as they are run
+		// The first arg is a string prefix to prepend to all log messages
+		Dbm.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
+	}
 
 	//Dbm.AddTableWithName(Ente{}, "entes").SetKeys(true, "Id")
 	Dbm.AddTableWithName(Run{}, "Runs").SetKeys(true, "Id")
@@ -95,6 +99,6 @@ func (me CustomTypeConverter) FromDb(target interface{}) (gorp.CustomScanner, bo
 
 func checkErr(err error, msg string) {
 	if err != nil {
-		log.Fatalln(msg, err)
+		common.LOG().Fatalln(msg, err)
 	}
 }

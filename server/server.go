@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"smilix/running/server/config"
-	"smilix/running/server/web"
+	"github.com/smilix/running/server/config"
+	"github.com/smilix/running/server/web"
 	"net/http"
 )
 

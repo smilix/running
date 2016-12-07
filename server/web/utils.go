@@ -2,7 +2,7 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
-	"smilix/running/server/common"
+	"github.com/smilix/running/server/common"
 )
 
 

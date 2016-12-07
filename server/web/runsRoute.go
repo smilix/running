@@ -1,7 +1,7 @@
 package web
 
 import (
-	m "smilix/running/server/models"
+	m "github.com/smilix/running/server/models"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"fmt"

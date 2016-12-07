@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 	"github.com/gin-gonic/gin"
-	"smilix/running/server/config"
+	"github.com/smilix/running/server/config"
 	"strings"
 	"path/filepath"
 )

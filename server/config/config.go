@@ -3,7 +3,7 @@ package config
 import (
 	"io/ioutil"
 	"encoding/json"
-	"smilix/running/server/common"
+	"github.com/smilix/running/server/common"
 )
 
 type Configuration struct {

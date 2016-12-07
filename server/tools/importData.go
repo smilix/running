@@ -1,7 +1,7 @@
 package main
 
 import (
-	m "smilix/running/server/models"
+	m "github.com/smilix/running/server/models"
 	"fmt"
 	"log"
 	"os"

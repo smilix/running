@@ -4,10 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"strings"
 	"golang.org/x/crypto/bcrypt"
-	"smilix/running/server/config"
+	"github.com/smilix/running/server/config"
 	"github.com/dgrijalva/jwt-go"
 	"time"
-	"smilix/running/server/common"
+	"github.com/smilix/running/server/common"
 )
 
 const SESSION_LIFETIME_SEC = 12 * 60 * 60;

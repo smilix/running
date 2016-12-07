@@ -4,3 +4,4 @@ static_app/
 build/
 config.json
 *.db
+client-source

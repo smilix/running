@@ -1,10 +1,20 @@
+# install
+
+```
+go get github.com/gin-gonic/gin \
+  && go get github.com/dgrijalva/jwt-go \
+  && go get github.com/mattn/go-sqlite3 \
+  && go get gopkg.in/gorp.v1 \
+  && go get golang.org/x/crypto/bcrypt
+```
+
 # running
 
 Create the server and client with
 ```
 cd $SOME_PATH
 git clone <client>
-make clean all repo=$SOME_PATH/running-client
+make clean all CLIENT_SOURCE=$SOME_PATH/running-client
 ```
 
 ## Authentication
@@ -37,3 +47,4 @@ curl -vX DELETE --header "Content-Type:application/json" localhost:8080/runs/
 * https://github.com/gin-gonic/gin
 * https://github.com/go-gorp/gorp
 * https://github.com/dgrijalva/jwt-go
+* https://github.com/mattn/go-sqlite3

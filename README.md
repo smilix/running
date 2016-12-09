@@ -5,7 +5,8 @@ go get github.com/gin-gonic/gin \
   && go get github.com/dgrijalva/jwt-go \
   && go get github.com/mattn/go-sqlite3 \
   && go get gopkg.in/gorp.v1 \
-  && go get golang.org/x/crypto/bcrypt
+  && go get golang.org/x/crypto/bcrypt \
+  && go get github.com/naoina/toml
 ```
 
 # running
@@ -48,3 +49,4 @@ curl -vX DELETE --header "Content-Type:application/json" localhost:8080/runs/
 * https://github.com/go-gorp/gorp
 * https://github.com/dgrijalva/jwt-go
 * https://github.com/mattn/go-sqlite3
+* https://github.com/naoina/toml

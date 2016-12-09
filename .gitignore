@@ -2,6 +2,6 @@
 _output/
 static_app/
 build/
-config.json
+config.toml
 *.db
 client-source

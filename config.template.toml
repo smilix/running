@@ -1,0 +1,10 @@
+# This config is in the toml format (https://github.com/toml-lang/toml)
+
+host = "127.0.0.1"
+port = 8080
+dbFile = "my.db"
+staticFolder = "static_app"
+# create auth by running: htpasswd -B -C 5 -n $USER
+auth = "add your auth here - see README.md !"
+# put a good secret in here:
+sessionSecret = ""

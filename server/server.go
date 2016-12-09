@@ -5,6 +5,7 @@ import (
 	"github.com/smilix/running/server/config"
 	"github.com/smilix/running/server/web"
 	"net/http"
+	"strconv"
 )
 
 func main() {
@@ -19,7 +20,7 @@ func main() {
 	web.NewStaticFiles(router.Group("/app"))
 	router.GET("/", redirectToApp)
 
-	router.Run(config.Get().Host + ":" + config.Get().Port)
+	router.Run(config.Get().Host + ":" + strconv.Itoa(config.Get().Port))
 }
 
 func redirectToApp(c *gin.Context) {

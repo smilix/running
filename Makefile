@@ -11,11 +11,11 @@ build-server: server/** copy-tpl
 	go build -o $(OUTPUT)/server server/server.go
 
 build-linux-server: server/** copy-tpl
-	docker run -it --rm -v "$(shell pwd)":/go/src/smilix/running -w /go/src/smilix/running running-linux-build go build -v -o $(OUTPUT)/server server/server.go
+	docker run -it --rm -v "$(shell pwd)":/go/src/github.com/smilix/running -w /go/src/github.com/smilix/running running-linux-build go build -v -o $(OUTPUT)/server server/server.go
 
-copy-tpl: config.template.json
+copy-tpl: config.template.toml
 	mkdir -p $(OUTPUT)
-	cp config.template.json $(OUTPUT)/
+	cp config.template.toml $(OUTPUT)/
 
 clean:
 	rm -rf $(OUTPUT)

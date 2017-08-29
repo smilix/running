@@ -1,15 +1,18 @@
 package main
 
 import (
+	"net/http"
+	"strconv"
+
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/smilix/running/server/config"
 	"github.com/smilix/running/server/web"
-	"net/http"
-	"strconv"
 )
 
 func main() {
 	router := gin.Default()
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	router.Use(web.CORSMiddleware("/api"))
 
 	api := router.Group("/api")

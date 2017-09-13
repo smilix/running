@@ -1,34 +1,44 @@
-# install
+# Build 
+
+## Install dependencies
+
+You need the dependency manager glide ( https://github.com/Masterminds/glide ). 
 
 ```
-go get github.com/gin-gonic/gin \
-  && go get github.com/dgrijalva/jwt-go \
-  && go get github.com/mattn/go-sqlite3 \
-  && go get gopkg.in/gorp.v1 \
-  && go get golang.org/x/crypto/bcrypt \
-  && go get github.com/naoina/toml
+cd server
+glide install
+glide rebuild
+cd ..
 ```
 
-# running
+## Install front end 
 
-Create the server and client with
+Put the client somewhere
 ```
 cd $SOME_PATH
 git clone <client>
-make clean all CLIENT_SOURCE=$SOME_PATH/running-client
 ```
 
-## Authentication
+## Build server
 
-Create a new login credentials for `$USER` with
 ```
-htpasswd -B -C 5 -n $USER
+export CLIENT_SOURCE=$SOME_PATH/running-client
+./build.sh client server
+# or using docker: 
+./build.sh client linux-server 
 ```
-and put the output into the `config.json` at the `auth` key.
+
+## Configuration
+
+Copy the `build/config.template.toml` to `build/config.toml` and edit the configuration.
 
 
+# Run
 
-## Testing requests
+Just run the executable. 
+
+
+# Testing requests
 ```bash
 # list runs
 curl -v --header "Content-Type:application/json" 'localhost:8080/runs?max=5'
@@ -45,8 +55,4 @@ curl -vX DELETE --header "Content-Type:application/json" localhost:8080/runs/
 
 # Used libs
 
-* https://github.com/gin-gonic/gin
-* https://github.com/go-gorp/gorp
-* https://github.com/dgrijalva/jwt-go
-* https://github.com/mattn/go-sqlite3
-* https://github.com/naoina/toml
+See the `server/glide.yaml`. 

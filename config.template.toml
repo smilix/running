@@ -5,6 +5,6 @@ port = 8080
 dbFile = "my.db"
 staticFolder = "static_app"
 # create auth by running: htpasswd -B -C 5 -n $USER
-auth = "add your auth here - see README.md !"
+auth = "add your auth here"
 # put a good secret in here:
 sessionSecret = ""

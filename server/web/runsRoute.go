@@ -76,22 +76,22 @@ func (r *Runs) listRuns(c *gin.Context) {
 		namedParams["to"] = to.Unix()
 	}
 
-	var Runs []m.Run
-	_, err = m.Dbm.Select(&Runs, "select * from Runs " + where + " order by Date desc" + limit, namedParams)
+	var runs []m.Run
+	_, err = m.Dbm.Select(&runs, "select * from Runs " + where + " order by Date desc" + limit, namedParams)
 	if CheckErrRest(c, err, 500, "Select failed") {
 		return
 	}
 
 	content := gin.H{
 		"result": "Success",
-		"runs": Runs,
-		"count": count,
+		"runs":   runs,
+		"count":  count,
 	}
 	c.JSON(200, content)
 }
 
 func (r *Runs) showRunDetail(c *gin.Context) {
-	id, valid := getRunId(c)
+	id, valid := getIdParam(c)
 	if !valid {
 		return
 	}
@@ -123,6 +123,7 @@ func (r *Runs) createRun(c *gin.Context) {
 		Comment: json.Comment,
 		Date: json.Date,
 		TimeUsed: json.TimeUsed,
+		ShoeId: json.ShoeId,
 	}
 
 	err = m.Dbm.Insert(&Run)
@@ -137,7 +138,7 @@ func (r *Runs) createRun(c *gin.Context) {
 
 // note no partial updates are allowed
 func (r *Runs) updateRun(c *gin.Context) {
-	id, valid := getRunId(c)
+	id, valid := getIdParam(c)
 	if !valid {
 		return
 	}
@@ -158,6 +159,7 @@ func (r *Runs) updateRun(c *gin.Context) {
 	runFromDb.Comment = inputRun.Comment
 	runFromDb.Date = inputRun.Date
 	runFromDb.TimeUsed = inputRun.TimeUsed
+	runFromDb.ShoeId = inputRun.ShoeId
 
 	_, err = m.Dbm.Update(&runFromDb)
 	if CheckErrRest(c, err, 500, "update error") {
@@ -168,7 +170,7 @@ func (r *Runs) updateRun(c *gin.Context) {
 }
 
 func (r *Runs) deleteRun(c *gin.Context) {
-	id, valid := getRunId(c)
+	id, valid := getIdParam(c)
 	if !valid {
 		return
 	}
@@ -189,19 +191,3 @@ func (r *Runs) deleteRun(c *gin.Context) {
 	})
 }
 
-/* helper functions */
-
-// the id, check second return value for error (is already handled)
-func getRunId(c *gin.Context) (int, bool) {
-	Run_id := c.Params.ByName("id")
-	id, idErr := strconv.Atoi(Run_id)
-	if idErr != nil {
-		c.JSON(400, gin.H{
-			"result": "error",
-			"reason": "invalid id",
-		})
-		return 0, false
-	}
-
-	return id, true
-}

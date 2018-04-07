@@ -61,7 +61,7 @@ func main() {
 		}
 		fmt.Println(runFromCsv)
 
-		err = m.Dbm.Insert(&runFromCsv)
+		err = m.dbm.Insert(&runFromCsv)
 		checkErr(err, "Failed to persist")
 
 		//fmt.Printf("%s, %s, %s, %s\n", timeStr, record[4], record[6], record[19])

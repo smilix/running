@@ -41,13 +41,44 @@ func init() {
 		Dbm.TraceOn("[gorp]", log.New(os.Stdout, "myapp:", log.Lmicroseconds))
 	}
 
-	//Dbm.AddTableWithName(Ente{}, "entes").SetKeys(true, "Id")
 	Dbm.AddTableWithName(Run{}, "Runs").SetKeys(true, "Id")
+	Dbm.AddTableWithName(Shoe{}, "Shoes").SetKeys(true, "Id")
 
 
 	//Dbm.TraceOn("[gorp]", r.INFO)
 	err = Dbm.CreateTablesIfNotExists()
 	checkErr(err, "create tables failed")
+
+	shoeMigration()
+}
+
+// if the shoe table is new, insert a default entry and assign this to every run
+func shoeMigration() {
+	count, err := Dbm.SelectInt("select count(*) from Shoes")
+	checkErr(err, "sql error")
+	if count > 0 {
+		return
+	}
+
+	common.LOG().Println("Do shoe migration")
+
+	_, err = Dbm.Exec("ALTER TABLE Runs ADD ShoeId integer")
+	checkErr(err, "transaction error")
+
+
+	tx, err := Dbm.Begin()
+	shoe := Shoe{
+		Created: time.Now().Unix(),
+		Bought:  0,
+		Comment: "Default Shoe",
+	}
+	err = tx.Insert(&shoe)
+	checkErr(err, "sql error")
+	_, err = tx.Exec("update Runs set ShoeId = ?", shoe.Id)
+	checkErr(err, "sql error")
+
+	err = tx.Commit()
+	checkErr(err, "transaction error")
 }
 
 func (d JDate) MarshalJSON() ([]byte, error) {

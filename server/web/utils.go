@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/smilix/running/server/common"
+	"strconv"
 )
 
 
@@ -24,4 +25,19 @@ func SendJsonError(c *gin.Context, status int, msg string) {
 		"reason": msg,
 	})
 	c.Abort()
+}
+
+// the id, check second return value for error (is already handled)
+func getIdParam(c *gin.Context) (int, bool) {
+	idParam := c.Params.ByName("id")
+	id, idErr := strconv.Atoi(idParam)
+	if idErr != nil {
+		c.JSON(400, gin.H{
+			"result": "error",
+			"reason": "invalid id",
+		})
+		return 0, false
+	}
+
+	return id, true
 }

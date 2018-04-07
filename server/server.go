@@ -18,6 +18,7 @@ func main() {
 	api := router.Group("/api")
 	web.NewAuth(api.Group("/auth"))
 	web.NewRuns(api.Group("/runs"))
+	web.NewShoes(api.Group("/shoes"))
 	api.GET("/status", sendStatus)
 
 	web.NewStaticFiles(router.Group("/app"))

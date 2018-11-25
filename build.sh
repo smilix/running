@@ -45,8 +45,9 @@ while (( "$#" )); do
                 exit 1
             fi
 
+            rm -rf ${STATIC_APP}
             mkdir -p ${OUTPUT}
-            ( cd ${CLIENT_SOURCE} && ng build --prod --base-href /app/ )
+            ( cd ${CLIENT_SOURCE} && ng build --prod  )
             cp -r ${CLIENT_SOURCE}/dist ${STATIC_APP}
             ;;
         *)

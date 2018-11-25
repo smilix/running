@@ -2,12 +2,11 @@
 
 ## Install dependencies
 
-You need the dependency manager glide ( https://github.com/Masterminds/glide ). 
+You need the dependency manager dep ( https://github.com/golang/dep ). 
 
 ```
 cd server
-glide install
-glide rebuild
+dep ensure
 cd ..
 ```
 
@@ -52,7 +51,3 @@ curl -vX PUT --header "Content-Type:application/json" -d @update.json localhost:
 # delete run
 curl -vX DELETE --header "Content-Type:application/json" localhost:8080/runs/
 ```
-
-# Used libs
-
-See the `server/glide.yaml`. 

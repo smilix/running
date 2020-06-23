@@ -22,7 +22,6 @@ Put the client somewhere
 ## Build server
 
 ```
-export CLIENT_SOURCE=$SOME_PATH/running-client
 ./build.sh server
 # or using docker: 
 ./build.sh server-docker

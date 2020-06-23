@@ -1,0 +1,26 @@
+<table mat-table [dataSource]="dataSource">
+
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef> Date</th>
+    <td mat-cell *matCellDef="let element"> {{element.dateLabel}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="length">
+    <th mat-header-cell *matHeaderCellDef> Distance</th>
+    <td mat-cell *matCellDef="let element"> {{element.totalLength | formatDistance}} km</td>
+  </ng-container>
+
+  <ng-container matColumnDef="timeUsed">
+    <th mat-header-cell *matHeaderCellDef> Time</th>
+    <td mat-cell *matCellDef="let element"> {{element.totalTimeUsed | formatDuration}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="timePerKm">
+    <th mat-header-cell *matHeaderCellDef> Time per km</th>
+    <td mat-cell *matCellDef="let element"> {{element.totalTimeUsed / element.totalLength * 1000 | formatDuration}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+

@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Error :(</h1>
+<div mat-dialog-content>
+  <p>{{data.errorMsg}}</p>
+  <pre *ngIf="data.errorDetails">{{data.errorDetails}}</pre>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="action()" cdkFocusInitial>{{data.actionLabel}}</button>
+  <button mat-button (click)="reload()">Reload Page</button>
+</div>

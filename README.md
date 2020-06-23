@@ -10,21 +10,22 @@ dep ensure
 cd ..
 ```
 
-## Install front end 
+## Build front end
+
+You need node & npm. 
 
 Put the client somewhere
 ```
-cd $SOME_PATH
-git clone <client>
+./build.sh client
 ```
 
 ## Build server
 
 ```
 export CLIENT_SOURCE=$SOME_PATH/running-client
-./build.sh client server
+./build.sh server
 # or using docker: 
-./build.sh client linux-server 
+./build.sh server-docker
 ```
 
 ## Configuration

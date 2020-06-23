@@ -2,8 +2,7 @@
 
 OUTPUT=build
 STATIC_APP=${OUTPUT}/static_app
-# in this optional file is stored the path to the client repository
-CLIENT_SOURCE_FILE=client-source
+CLIENT_SOURCE=webapp
 
 copyTpl() {
     mkdir -p ${OUTPUT}
@@ -29,26 +28,19 @@ while (( "$#" )); do
             mkdir -p ${OUTPUT}
             ( cd server && go build -o ../${OUTPUT}/server server.go )
             ;;
-        linux-server)
+        server-docker)
             copyTpl
             mkdir -p ${OUTPUT}
             docker run -it --rm \
                 -v "$(pwd)":/go/src/github.com/smilix/running \
-                -w /go/src/github.com/smilix/running/server \
-                golang:1.9 \
+                --workdir /go/src/github.com/smilix/running/server \
+                golang:1.13 \
                 go build -v -o ../${OUTPUT}/server server.go
             ;;
         client)
-            CLIENT_SOURCE=$(test -e ${CLIENT_SOURCE_FILE} && cat ${CLIENT_SOURCE_FILE})
-            if [ "$CLIENT_SOURCE" == "" ]; then
-                echo "The running-client source is undefined, use the \"CLIENT_SOURCE=...\" parameter or put the path into the ${CLIENT_SOURCE_FILE} file."
-                exit 1
-            fi
-
             rm -rf ${STATIC_APP}
             mkdir -p ${OUTPUT}
-            ( cd ${CLIENT_SOURCE} && ng build --prod  )
-            cp -r ${CLIENT_SOURCE}/dist ${STATIC_APP}
+            ( cd ${CLIENT_SOURCE} && npm ci && npm run build )
             ;;
         *)
             usage

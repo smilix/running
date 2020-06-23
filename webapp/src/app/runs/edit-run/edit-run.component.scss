@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 600px;
+  margin: 12px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.action {
+  display: flex;
+  justify-content: space-between;
+}
+
+.field-mod {
+  transform: scale(1.5);
+  margin: 0 6px;
+}
+
+app-stop-watch {
+  margin-bottom: 12px;
+}

@@ -1,0 +1,23 @@
+<mat-card class="centered-card">
+
+  <mat-card-title>Please Sign In</mat-card-title>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password">
+    </mat-form-field>
+
+    <mat-checkbox formControlName="remember">Remember Password</mat-checkbox>
+
+    <button type="submit" mat-raised-button class="submit-btn" color="primary" [disabled]="loginForm.invalid">Login</button>
+
+    <mat-error *ngIf="errorMsg" class="error-msg">{{errorMsg}}</mat-error>
+  </form>
+
+</mat-card>

@@ -1,12 +1,11 @@
 package web
 
 import (
-	"net/http"
-	"os"
 	"github.com/gin-gonic/gin"
 	"github.com/smilix/running/server/config"
+	"net/http"
+	"os"
 	"strings"
-	"path/filepath"
 )
 
 type (
@@ -32,12 +31,6 @@ func NewStaticFiles(group *gin.RouterGroup) {
 func (fs ngRoutesAwareFS) Open(name string) (http.File, error) {
 	f, err := fs.fs.Open(name)
 	if err != nil {
-		lastSep := strings.LastIndexByte(name, filepath.Separator)
-		if lastSep != 0 {
-			// not in root
-			return nil, err
-		}
-
 		if strings.Contains(name, ".") {
 			// a ng route has no point in it
 			// (and this checks also for the 'index.html'
@@ -46,7 +39,6 @@ func (fs ngRoutesAwareFS) Open(name string) (http.File, error) {
 
 		return fs.Open("/index.html")
 	}
-
 
 	return neuteredReaddirFile{f}, nil
 }

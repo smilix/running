@@ -1,0 +1,30 @@
+<mat-card class="card">
+
+  <mat-card-title>{{newMode ? 'Add' : 'Edit'}} run</mat-card-title>
+
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+
+    <mat-form-field>
+      <mat-label>Bought</mat-label>
+      <input matInput formControlName="bought" type="datetime-local">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Comment</mat-label>
+      <textarea matInput cdkTextareaAutosize formControlName="comment"></textarea>
+    </mat-form-field>
+
+    <div class="action">
+      <button type="button" mat-button (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+      <button type="submit" mat-raised-button class="submit-btn" color="primary"
+              [disabled]="editForm.invalid || editForm.disabled">{{newMode ? 'Add' : 'Update'}} run
+      </button>
+    </div>
+  </form>
+
+
+</mat-card>

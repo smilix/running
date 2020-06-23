@@ -1,0 +1,38 @@
+<div class="app-container" [class.is-mobile]="mobileQuery.matches">
+
+  <mat-toolbar color="primary" class="toolbar">
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <h1 class="app-name">Running</h1>
+
+    <img src="assets/favicons/favicon-96x96.png" class="app-logo">
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="!mobileQuery.matches">
+
+      <mat-nav-list>
+        <ng-container *ngIf="sessionQuery.hasSession$ | async; else loginBlock">
+          <a mat-list-item routerLink="stats/overview" routerLinkActive="nav-selected">Overview</a>
+          <a mat-list-item routerLink="runs" routerLinkActive="nav-selected">Runs</a>
+          <a mat-list-item routerLink="shoes" routerLinkActive="nav-selected">Shoes</a>
+          <a mat-list-item routerLink="runs/edit/-">Add run</a>
+          <mat-divider></mat-divider>
+          <a mat-list-item (click)="logout()">Logout</a>
+        </ng-container>
+        <ng-template #loginBlock>
+          <a mat-list-item routerLink="login" routerLinkActive="nav-selected">Login</a>
+        </ng-template>
+
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

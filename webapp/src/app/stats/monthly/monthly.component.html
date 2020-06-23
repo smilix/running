@@ -1,0 +1,13 @@
+<div class="all-stats" *ngIf="statsService.monthly$ | async as stat else loading">
+
+  <!--  <mat-card>-->
+  <!--    <mat-card-title>All Months <a [routerLink]="['/stats/monthly']" mat-button>[ Details ]</a></mat-card-title>-->
+  <app-simple-stats-table [dataSource]="stat"></app-simple-stats-table>
+  <!--  </mat-card>-->
+
+</div>
+
+
+<ng-template #loading>
+  <app-waiting></app-waiting>
+</ng-template>

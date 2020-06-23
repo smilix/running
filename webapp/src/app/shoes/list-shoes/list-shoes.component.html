@@ -1,0 +1,63 @@
+<table mat-table [dataSource]="shoesQuery.allShoesSorted$" multiTemplateDataRows>
+
+  <ng-container matColumnDef="bought">
+    <th mat-header-cell *matHeaderCellDef> Bought</th>
+    <td mat-cell *matCellDef="let element"> {{element.bought | formatDate}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="comment">
+    <th mat-header-cell *matHeaderCellDef> Comment</th>
+    <td mat-cell *matCellDef="let element"> {{element.comment}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="used">
+    <th mat-header-cell *matHeaderCellDef> Used in runs</th>
+    <td mat-cell *matCellDef="let element"> {{element.used}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalLength">
+    <th mat-header-cell *matHeaderCellDef> Total distance</th>
+    <td mat-cell *matCellDef="let element"> {{element.totalLength | formatDistance}} km</td>
+  </ng-container>
+
+  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+      <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+        <div class="action">
+          <button mat-button color="warn" [disabled]="disabled" (click)="deleteShoe(element.id)">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+          <button mat-button color="accent" [disabled]="disabled" [routerLink]="['/shoes/edit', element.id]">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+        </div>
+        <div class="last-runs">
+          Last 10 runs:
+          <ul>
+            <li *ngFor="let run of runsQuery.selectLastRunsForShoe(element.id) | async">{{run.date | formatDate}} - {{run.length | formatDistance}}km
+            </li>
+          </ul>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+  <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+      class="element-row"
+      [class.expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+</table>
+
+<div class="page-action">
+  <button mat-fab color="primary" [routerLink]="['/shoes/edit/-']">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

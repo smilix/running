@@ -1,0 +1,12 @@
+.msg {
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-evenly;
+
+  button {
+    width: 40%;
+  }
+}

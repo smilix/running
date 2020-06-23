@@ -1,0 +1,139 @@
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {RunsQuery} from "../state/runs.query";
+import {RunsService} from "../state/runs.service";
+import {ShoesService} from "../../shoes/state/shoes.service";
+import {ShoesQuery} from "../../shoes/state/shoes.query";
+import {combineLatest} from "rxjs";
+import {DatePipe} from "@angular/common";
+import {ActivatedRoute, Router} from "@angular/router";
+import {filter, finalize, switchMap, take} from "rxjs/operators";
+import {clientToServerTime, serverToClientTime} from "../../shared/utils";
+import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
+
+@UntilDestroy()
+@Component({
+  selector: 'app-edit-run',
+  templateUrl: './edit-run.component.html',
+  styleUrls: ['./edit-run.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EditRunComponent implements OnInit {
+
+  editForm: FormGroup = this.formBuilder.group({
+    when: [0, Validators.required],
+    distance: [0, [Validators.required, Validators.min(1)]],
+    duration: [0, [Validators.required, Validators.min(1)]],
+    comment: "",
+    shoeId: [0, Validators.required]
+  });
+  newMode = false;
+
+  private currentRunId: number | null = null;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private datePipe: DatePipe,
+    private runsQuery: RunsQuery,
+    private runsService: RunsService,
+    public shoesQuery: ShoesQuery,
+    private shoeService: ShoesService,
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.runsService.load();
+    this.shoeService.load();
+
+    combineLatest([
+      this.runsQuery.selectLoading(),
+      this.shoesQuery.selectLoading(),
+    ]).pipe(
+      untilDestroyed(this),
+      filter(([runLoading, shoesLoading]) => !runLoading && !shoesLoading),
+      take(1),
+      switchMap(() => this.activatedRoute.paramMap)
+    ).subscribe(params => {
+      // both stores are loaded and we get updates on route params
+      this.newMode = params.get('id') === '-';
+
+      let when = Date.now();
+      let distance = 0;
+      let duration = 0;
+      let comment = '';
+      let shoeId = this.shoesQuery.latestShoe()?.id;
+
+      let run;
+      if (this.newMode) {
+        run = this.runsQuery.getLatestRun();
+      } else {
+        this.currentRunId = parseInt(params.get('id'), 10);
+        run = this.runsQuery.getEntity(this.currentRunId);
+        when = serverToClientTime(run.date);
+      }
+
+      if (run) {
+        distance = Math.floor(run.length / 1000);
+        duration = Math.floor(run.timeUsed / 60);
+        comment = run.comment;
+        shoeId = run.shoeId;
+      }
+
+      // example: 2016-07-05T16:47
+      const dateStr = this.datePipe.transform(when, 'yyyy-MM-ddTHH:mm');
+
+      this.editForm.setValue({
+        when: dateStr,
+        distance: distance,
+        duration: duration,
+        comment: comment,
+        shoeId: shoeId,
+      });
+
+      this.editForm.updateValueAndValidity();
+    });
+  }
+
+  onSubmit(data: any) {
+    const run = {
+      date: clientToServerTime(new Date(data.when)).getTime(),
+      length: data.distance * 1000,
+      timeUsed: data.duration * 60,
+      comment: data.comment,
+      shoeId: data.shoeId,
+    };
+
+    this.editForm.disable();
+
+    if (this.newMode) {
+      console.log('Add new run:', data);
+      this.runsService.add(run).pipe(
+        finalize(() => this.editForm.enable())
+      ).subscribe(() => this.router.navigate(['/runs']))
+    } else {
+      console.log('Update run:', data);
+      this.runsService.update(this.currentRunId, run).pipe(
+        finalize(() => this.editForm.enable())
+      ).subscribe();
+    }
+
+  }
+
+  addToField(fieldName: string, diff: number) {
+    const patch = {};
+    patch[fieldName] = this.editForm.value[fieldName] + diff;
+    this.editForm.patchValue(patch);
+  }
+
+  setDuration(value: number) {
+    this.editForm.patchValue({
+      duration: value
+    });
+  }
+
+  back() {
+    history.back();
+  }
+}

@@ -1,0 +1,67 @@
+<mat-card class="card">
+
+  <mat-card-title>{{newMode ? 'Add' : 'Edit'}} run</mat-card-title>
+
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+
+    <mat-form-field>
+      <mat-label>When</mat-label>
+      <input matInput formControlName="when" type="datetime-local">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Distance</mat-label>
+      <input matInput formControlName="distance" type="number">
+      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+              (click)="addToField('distance', -1); $event.preventDefault()">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+              (click)="addToField('distance', 1); $event.preventDefault()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Duration</mat-label>
+      <input matInput formControlName="duration" type="number">
+      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+              (click)="addToField('duration', -1); $event.preventDefault()">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+              (click)="addToField('duration', 1); $event.preventDefault()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <app-stop-watch [disabled]="editForm.disabled" (timerValue)="setDuration($event)"></app-stop-watch>
+
+    <mat-form-field>
+      <mat-label>Comment</mat-label>
+      <textarea matInput cdkTextareaAutosize formControlName="comment"></textarea>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Shoe</mat-label>
+      <mat-select formControlName="shoeId">
+        <mat-option *ngFor="let shoe of shoesQuery.selectAll() | async" [value]="shoe.id">
+          {{shoe.bought | formatDate}} - {{shoe.comment}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="action">
+      <button type="button" mat-button (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+      <button type="submit" mat-raised-button class="submit-btn" color="primary"
+              [disabled]="editForm.invalid || editForm.disabled">{{newMode ? 'Add' : 'Update'}} run
+      </button>
+    </div>
+  </form>
+
+
+</mat-card>

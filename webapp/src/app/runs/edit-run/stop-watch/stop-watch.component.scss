@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+}
+
+.display {
+  min-width: 100px;
+  background: aliceblue;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.spacer {
+  width: 12px;
+}

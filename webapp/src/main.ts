@@ -10,7 +10,7 @@ if (environment.production) {
 }
 
 persistState({
-  include: ['session'],
+  include: ['session', 'runs.tryAdd'],
 });
 
 platformBrowserDynamic().bootstrapModule(AppModule)

@@ -1,7 +1,15 @@
+<mat-card *ngIf="triedAdd$ | async as tryRun" class="card">
+  <mat-card-title>Restore data</mat-card-title>
+  The last run could not be saved on the server.
+  <mat-card-actions class="try-add-actions">
+    <button mat-button color="warn" (click)="discardData()">Discard data</button>
+    <button mat-raised-button color="primary" (click)="restoreData(tryRun)">Restore data</button>
+  </mat-card-actions>
+</mat-card>
+
 <mat-card class="card">
 
   <mat-card-title>{{newMode ? 'Add' : 'Edit'}} run</mat-card-title>
-
 
   <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
 

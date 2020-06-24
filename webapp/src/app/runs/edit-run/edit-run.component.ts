@@ -7,9 +7,10 @@ import {ShoesQuery} from "../../shoes/state/shoes.query";
 import {combineLatest} from "rxjs";
 import {DatePipe} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
-import {filter, finalize, switchMap, take} from "rxjs/operators";
+import {filter, finalize, switchMap, take, takeWhile} from "rxjs/operators";
 import {clientToServerTime, serverToClientTime} from "../../shared/utils";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
+import {Run} from "../state/run.model";
 
 @UntilDestroy()
 @Component({
@@ -29,7 +30,13 @@ export class EditRunComponent implements OnInit {
   });
   newMode = false;
 
+  readonly triedAdd$ = this.runsQuery.select(s => s.tryAdd).pipe(
+    untilDestroyed(this),
+    takeWhile(() => !this.ignoreRestore)
+  );
+
   private currentRunId: number | null = null;
+  private ignoreRestore = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -60,11 +67,6 @@ export class EditRunComponent implements OnInit {
       this.newMode = params.get('id') === '-';
 
       let when = Date.now();
-      let distance = 0;
-      let duration = 0;
-      let comment = '';
-      let shoeId = this.shoesQuery.latestShoe()?.id;
-
       let run;
       if (this.newMode) {
         run = this.runsQuery.getLatestRun();
@@ -74,25 +76,34 @@ export class EditRunComponent implements OnInit {
         when = serverToClientTime(run.date);
       }
 
-      if (run) {
-        distance = Math.floor(run.length / 1000);
-        duration = Math.floor(run.timeUsed / 60);
-        comment = run.comment;
-        shoeId = run.shoeId;
-      }
-
-      // example: 2016-07-05T16:47
-      const dateStr = this.datePipe.transform(when, 'yyyy-MM-ddTHH:mm');
-
-      this.editForm.setValue({
-        when: dateStr,
-        distance: distance,
-        duration: duration,
-        comment: comment,
-        shoeId: shoeId,
-      });
+      this.addRunToForm(run, when);
 
       this.editForm.updateValueAndValidity();
+    });
+  }
+
+  private addRunToForm(run: Partial<Run>, when: number) {
+    let distance = 0;
+    let duration = 0;
+    let comment = '';
+    let shoeId = this.shoesQuery.latestShoe()?.id;
+
+    // example: 2016-07-05T16:47
+    const dateStr = this.datePipe.transform(when, 'yyyy-MM-ddTHH:mm');
+
+    if (run) {
+      distance = Math.floor(run.length / 1000);
+      duration = Math.floor(run.timeUsed / 60);
+      comment = run.comment;
+      shoeId = run.shoeId;
+    }
+
+    this.editForm.setValue({
+      when: dateStr,
+      distance: distance,
+      duration: duration,
+      comment: comment,
+      shoeId: shoeId,
     });
   }
 
@@ -105,6 +116,7 @@ export class EditRunComponent implements OnInit {
       shoeId: data.shoeId,
     };
 
+    this.ignoreRestore = true;
     this.editForm.disable();
 
     if (this.newMode) {
@@ -135,5 +147,14 @@ export class EditRunComponent implements OnInit {
 
   back() {
     history.back();
+  }
+
+  restoreData(tryRun: Partial<Run>) {
+    this.addRunToForm(tryRun, serverToClientTime(tryRun.date));
+    this.runsService.clearTryAdd();
+  }
+
+  discardData() {
+    this.runsService.clearTryAdd();
   }
 }

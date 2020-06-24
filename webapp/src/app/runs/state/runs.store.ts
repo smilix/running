@@ -3,6 +3,7 @@ import {EntityState, EntityStore, StoreConfig} from '@datorama/akita';
 import {Run} from './run.model';
 
 export interface RunsState extends EntityState<Run> {
+  tryAdd: Partial<Run> | null
 }
 
 @Injectable({providedIn: 'root'})
@@ -13,7 +14,6 @@ export interface RunsState extends EntityState<Run> {
   }
 })
 export class RunsStore extends EntityStore<RunsState> {
-
   constructor() {
     super();
   }

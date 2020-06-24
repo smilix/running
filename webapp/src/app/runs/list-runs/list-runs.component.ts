@@ -9,7 +9,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {ShoesQuery} from "../../shoes/state/shoes.query";
 import {ShoesService} from "../../shoes/state/shoes.service";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
-import {filter} from "rxjs/operators";
+import {filter, switchMap} from "rxjs/operators";
 
 @UntilDestroy()
 @Component({
@@ -50,9 +50,9 @@ export class ListRunsComponent implements OnInit {
     this.runsService.load();
     this.shoeService.load();
 
-    this.runsQuery.allRunsSorted$.pipe(
+    this.runsQuery.whenLoaded$.pipe(
       untilDestroyed(this),
-      filter(runs => runs.length > 0)
+      switchMap(() => this.runsQuery.allRunsSorted$),
     ).subscribe(runs => {
       if (this.dataSource) {
         this.dataSource.data = runs;

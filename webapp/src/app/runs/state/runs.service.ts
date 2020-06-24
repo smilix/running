@@ -5,7 +5,7 @@ import {map, tap} from 'rxjs/operators';
 import {Run} from './run.model';
 import {RunsStore} from './runs.store';
 import {environment} from "../../../environments/environment";
-import {Observable} from "rxjs";
+import {Observable, throwError} from "rxjs";
 import {ErrorDialogService} from "../../shared/error-dialog/error-dialog.component";
 import {ApiResponse} from "../../shared/api";
 
@@ -27,6 +27,9 @@ export class RunsService {
     private runsStore: RunsStore,
     private http: HttpClient,
     private errorDialog: ErrorDialogService) {
+
+    // reset to 'false' (it was true because of the cached 'tryAdd' value)
+    runsStore.setHasCache(false);
   }
 
   load(): void {
@@ -40,7 +43,17 @@ export class RunsService {
       .subscribe()
   }
 
+  clearTryAdd() {
+    this.runsStore.update({
+      tryAdd: null
+    });
+  }
+
   add(run: Omit<Run, 'id'>): Observable<Run> {
+    this.runsStore.update({
+      tryAdd: run
+    });
+    return throwError('foo');
     return this.http.post<RunAddResponse>(`${environment.backendPath}/runs`, run).pipe(
       map(response => {
         const newRun: Run = {
@@ -49,6 +62,7 @@ export class RunsService {
         };
         console.log('New run:', newRun);
         this.runsStore.add(newRun);
+        this.clearTryAdd();
         return newRun;
       }),
       this.errorDialog.catchApiError('Add run')

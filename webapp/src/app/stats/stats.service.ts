@@ -88,6 +88,9 @@ export class StatsService {
   }
 
   makeYearlyStats(runs: Run[]) {
+    if (runs.length === 0) {
+      return [];
+    }
     let lastEntry = runs[runs.length - 1];
     let yearDelta = new Date().getFullYear() - new Date(serverToClientTime(lastEntry.date)).getFullYear();
     return this.makeIntervalStats(runs, yearDelta + 1,

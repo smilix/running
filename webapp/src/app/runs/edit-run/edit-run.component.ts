@@ -7,7 +7,7 @@ import {ShoesQuery} from "../../shoes/state/shoes.query";
 import {combineLatest} from "rxjs";
 import {DatePipe} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
-import {filter, finalize, switchMap, take, takeWhile} from "rxjs/operators";
+import {filter, finalize, min, switchMap, take, takeWhile} from "rxjs/operators";
 import {clientToServerTime, serverToClientTime} from "../../shared/utils";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 import {Run} from "../state/run.model";
@@ -140,8 +140,9 @@ export class EditRunComponent implements OnInit {
   }
 
   setDuration(value: number) {
+    const minuteValue = Math.floor(value / 60);
     this.editForm.patchValue({
-      duration: value
+      duration: minuteValue
     });
   }
 

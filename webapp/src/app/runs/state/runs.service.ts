@@ -53,7 +53,6 @@ export class RunsService {
     this.runsStore.update({
       tryAdd: run
     });
-    return throwError('foo');
     return this.http.post<RunAddResponse>(`${environment.backendPath}/runs`, run).pipe(
       map(response => {
         const newRun: Run = {

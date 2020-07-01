@@ -20,10 +20,20 @@ form {
   justify-content: space-between;
 }
 
-.field-mod {
-  transform: scale(1.5);
-  margin: 0 6px;
+.with-buttons {
+  display: flex;
+
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-icon-button {
+    transform: scale(1.5);
+    margin: 0 6px;
+  }
 }
+
+
 
 app-stop-watch {
   margin-bottom: 12px;

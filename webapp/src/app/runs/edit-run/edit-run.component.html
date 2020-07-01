@@ -18,31 +18,35 @@
       <input matInput formControlName="when" type="datetime-local">
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Distance</mat-label>
-      <input matInput formControlName="distance" type="number">
-      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+    <div class="with-buttons">
+      <mat-form-field>
+        <mat-label>Distance</mat-label>
+        <input matInput formControlName="distance" type="number">
+      </mat-form-field>
+      <button mat-icon-button [disabled]="editForm.disabled"
               (click)="addToField('distance', -1); $event.preventDefault()">
         <mat-icon>remove</mat-icon>
       </button>
-      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+      <button mat-icon-button [disabled]="editForm.disabled"
               (click)="addToField('distance', 1); $event.preventDefault()">
         <mat-icon>add</mat-icon>
       </button>
-    </mat-form-field>
+    </div>
 
-    <mat-form-field>
-      <mat-label>Duration</mat-label>
-      <input matInput formControlName="duration" type="number">
-      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+    <div class="with-buttons">
+      <mat-form-field>
+        <mat-label>Duration</mat-label>
+        <input matInput formControlName="duration" type="number">
+      </mat-form-field>
+      <button mat-icon-button [disabled]="editForm.disabled"
               (click)="addToField('duration', -1); $event.preventDefault()">
         <mat-icon>remove</mat-icon>
       </button>
-      <button class="field-mod" matSuffix mat-icon-button [disabled]="editForm.disabled"
+      <button mat-icon-button [disabled]="editForm.disabled"
               (click)="addToField('duration', 1); $event.preventDefault()">
         <mat-icon>add</mat-icon>
       </button>
-    </mat-form-field>
+    </div>
 
     <app-stop-watch [disabled]="editForm.disabled" (timerValue)="setDuration($event)"></app-stop-watch>
 

@@ -3,6 +3,7 @@ import {MediaMatcher} from "@angular/cdk/layout";
 import {SessionQuery} from "./session/state/session.query";
 import {SessionService} from "./session/state/session.service";
 import {Router} from "@angular/router";
+import {versionInfo} from "../environments/version";
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ import {Router} from "@angular/router";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+  readonly version = versionInfo;
 
   mobileQuery: MediaQueryList;
 

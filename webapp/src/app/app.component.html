@@ -29,10 +29,19 @@
         </ng-template>
 
       </mat-nav-list>
+
+      <div class="version">
+        {{version.revision}}{{version.dirty ? '-dirty' : ''}}
+      </div>
     </mat-sidenav>
 
     <mat-sidenav-content>
       <router-outlet></router-outlet>
+
+
+      <div class="footer">
+        <a href="https://github.com/smilix/running">github.com/smilix/running</a>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

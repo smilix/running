@@ -38,11 +38,16 @@ h1.app-name {
      causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
   flex: 1;
 
-   .mat-list-item.nav-selected {
-     background-color: mat-color($primary, 50);
+  .mat-list-item {
 
-     ::ng-deep .mat-list-item-content {
-      color: mat-color($primary);
+    margin: 10px 0;
+
+    &.nav-selected {
+      background-color: mat-color($primary, 50);
+
+      ::ng-deep .mat-list-item-content {
+        color: mat-color($primary);
+      }
     }
   }
 }

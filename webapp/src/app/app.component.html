@@ -1,4 +1,4 @@
-<div class="app-container" [class.is-mobile]="mobileQuery.matches">
+<div class="app-container" [class.is-mobile]="mobileQuery.matches" (swipeleft)="swipeLeft()" (swiperight)="swipeRight()">
 
   <mat-toolbar color="primary" class="toolbar">
     <button mat-icon-button (click)="snav.toggle()">

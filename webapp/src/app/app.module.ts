@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -14,9 +14,9 @@ import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
 import {RunsModule} from "./runs/runs.module";
 import {ShoesModule} from "./shoes/shoes.module";
-import {MatTableModule} from "@angular/material/table";
 import {SharedModule} from "./shared/shared.module";
 import {StatsModule} from "./stats/stats.module";
+import {HammerConfig} from "./hammer.config";
 
 @NgModule({
   declarations: [
@@ -24,6 +24,7 @@ import {StatsModule} from "./stats/stats.module";
   ],
   imports: [
     BrowserModule,
+    HammerModule,
     AppRoutingModule,
     environment.production ? [] : AkitaNgDevtools,
     SessionModule,
@@ -38,7 +39,12 @@ import {StatsModule} from "./stats/stats.module";
     MatButtonModule,
     SharedModule,
   ],
-  // providers: [{provide: NG_ENTITY_SERVICE_CONFIG, useValue: {baseUrl: 'https://jsonplaceholder.typicode.com'}}],
+  providers: [
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerConfig
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

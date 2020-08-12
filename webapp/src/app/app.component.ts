@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {MediaMatcher} from "@angular/cdk/layout";
 import {SessionQuery} from "./session/state/session.query";
 import {SessionService} from "./session/state/session.service";
 import {Router} from "@angular/router";
 import {versionInfo} from "../environments/version";
+import {MatSidenav} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,9 @@ export class AppComponent {
 
   mobileQuery: MediaQueryList;
 
+  @ViewChild('snav')
+  private snav: MatSidenav;
+
   constructor(media: MediaMatcher,
               public sessionQuery: SessionQuery,
               private sessionService: SessionService,
@@ -27,5 +31,11 @@ export class AppComponent {
   logout() {
     this.sessionService.logout();
     this.router.navigate(['login'])
+  }
+
+  checkClose() {
+    if (this.mobileQuery.matches) {
+      this.snav.close();
+    }
   }
 }

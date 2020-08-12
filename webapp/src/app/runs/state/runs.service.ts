@@ -3,9 +3,9 @@ import {Injectable} from '@angular/core';
 import {cacheable} from '@datorama/akita';
 import {map, tap} from 'rxjs/operators';
 import {Run} from './run.model';
-import {RunsStore} from './runs.store';
+import {RunsStore, TimerState} from './runs.store';
 import {environment} from "../../../environments/environment";
-import {Observable, throwError} from "rxjs";
+import {Observable} from "rxjs";
 import {ErrorDialogService} from "../../shared/error-dialog/error-dialog.component";
 import {ApiResponse} from "../../shared/api";
 
@@ -18,8 +18,6 @@ interface RunAddResponse extends ApiResponse {
   id: number;
 }
 
-const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
-
 @Injectable({providedIn: 'root'})
 export class RunsService {
 
@@ -30,6 +28,18 @@ export class RunsService {
 
     // reset to 'false' (it was true because of the cached 'tryAdd' value)
     runsStore.setHasCache(false);
+
+
+    // we don't persist the old current value, so we use the old value for it
+    const oldValue = this.runsStore.getValue().timer.oldValue;
+    if (oldValue > 0) {
+      this.runsStore.update(s => ({
+        timer: {
+          ...s.timer,
+          currentValue: oldValue
+        }
+      }));
+    }
   }
 
   load(): void {
@@ -43,10 +53,25 @@ export class RunsService {
       .subscribe()
   }
 
-  clearTryAdd() {
-    this.runsStore.update({
-      tryAdd: null
+  updateTimerState(timer: Partial<TimerState>) {
+    this.runsStore.update(s => ({
+      timer: {
+        ...s.timer,
+        ...timer
+      }
+    }));
+  }
+
+  clearTimerState() {
+    this.updateTimerState({
+      startValue: null,
+      currentValue: 0,
+      oldValue: 0,
     });
+  }
+
+  clearTryAdd() {
+    this.runsStore.update({tryAdd: null});
   }
 
   add(run: Omit<Run, 'id'>): Observable<Run> {

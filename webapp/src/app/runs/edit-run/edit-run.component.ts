@@ -123,12 +123,17 @@ export class EditRunComponent implements OnInit {
       console.log('Add new run:', data);
       this.runsService.add(run).pipe(
         finalize(() => this.editForm.enable())
-      ).subscribe(() => this.router.navigate(['/runs']))
+      ).subscribe(() => {
+        this.runsService.clearTimerState();
+        return this.router.navigate(['/runs']);
+      })
     } else {
       console.log('Update run:', data);
       this.runsService.update(this.currentRunId, run).pipe(
         finalize(() => this.editForm.enable())
-      ).subscribe();
+      ).subscribe(() => {
+        this.runsService.clearTimerState();
+      });
     }
 
   }

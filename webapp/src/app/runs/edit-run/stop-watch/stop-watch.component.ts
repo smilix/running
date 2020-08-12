@@ -1,6 +1,9 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {timer} from "rxjs";
 import {takeWhile} from "rxjs/operators";
+import {RunsService} from "../../state/runs.service";
+import {RunsQuery} from "../../state/runs.query";
+import {TimerState} from "../../state/runs.store";
 
 @Component({
   selector: 'app-stop-watch',
@@ -16,16 +19,20 @@ export class StopWatchComponent implements OnInit, OnDestroy {
   @Input()
   disabled = false;
 
-  value = 0;
   running = false;
 
-  private start: number;
-  private oldValue = 0;
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private runsService: RunsService,
+    public runsQuery: RunsQuery,
+  ) {
   }
 
   ngOnInit(): void {
+    const timerState = this.runsQuery.getTimerState();
+    if (timerState.startValue) {
+      this.running = true;
+      this.startTimer();
+    }
   }
 
   ngOnDestroy() {
@@ -35,29 +42,39 @@ export class StopWatchComponent implements OnInit, OnDestroy {
   toggle() {
     this.running = !this.running;
 
-    if (this.running) {
-      this.start = Date.now();
+    const now = Date.now();
+    const timer = this.runsQuery.getTimerState();
+    const update: Partial<TimerState> = {};
 
-      timer(1000, 1000).pipe(
-        takeWhile(() => this.running))
-        .subscribe(() => {
-          this.value = this.oldValue + Math.floor((Date.now() - this.start) / 1000);
-          this.changeDetectorRef.markForCheck()
-        });
+    if (this.running) {
+      update.startValue = now;
+      this.startTimer();
     } else {
-      this.value = this.oldValue + Math.floor((Date.now() - this.start) / 1000);
-      this.oldValue = this.value;
+      update.currentValue = timer.oldValue + Math.floor((now - timer.startValue) / 1000);
+      update.oldValue = timer.currentValue;
+      update.startValue = null;
     }
+
+    this.runsService.updateTimerState(update);
   }
 
   reset() {
     this.running = false;
-    this.start = null;
-    this.value = 0;
-    this.oldValue = 0;
+    this.runsService.clearTimerState();
   }
 
   apply() {
-    this.timerValue.emit(this.value);
+    this.timerValue.emit(this.runsQuery.getTimerState().currentValue);
+  }
+
+  private startTimer() {
+    timer(1000, 1000).pipe(
+      takeWhile(() => this.running))
+      .subscribe(() => {
+        const timer = this.runsQuery.getTimerState();
+        this.runsService.updateTimerState({
+          currentValue: timer.oldValue + Math.floor((Date.now() - timer.startValue) / 1000)
+        });
+      });
   }
 }

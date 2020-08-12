@@ -1,4 +1,4 @@
-<div class="display">{{value | formatDuration}}</div>
+<div class="display">{{runsQuery.timerValue$ | async | formatDuration}}</div>
 <button type="button" mat-flat-button color="accent" [disabled]="disabled" (click)="toggle()">
   <ng-container *ngIf="running; else start">
     <mat-icon>pause</mat-icon>

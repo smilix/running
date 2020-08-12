@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Order, QueryEntity} from '@datorama/akita';
-import {RunsState, RunsStore} from './runs.store';
+import {RunsState, RunsStore, TimerState} from './runs.store';
 import {Observable} from "rxjs";
 import {Run} from "./run.model";
 import {filter, map, take} from "rxjs/operators";
@@ -22,8 +22,14 @@ export class RunsQuery extends QueryEntity<RunsState> {
     sortByOrder: Order.DESC,
   });
 
+  readonly timerValue$: Observable<number> = this.select(s => s.timer.currentValue);
+
   constructor(protected store: RunsStore) {
     super(store);
+  }
+
+  getTimerState(): TimerState {
+    return this.getValue().timer;
   }
 
   getLatestRun(): Run {

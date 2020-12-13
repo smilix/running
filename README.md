@@ -1,3 +1,5 @@
+Superseded by [running2](https://github.com/smilix/running2).
+
 # Build 
 
 ## Install dependencies
